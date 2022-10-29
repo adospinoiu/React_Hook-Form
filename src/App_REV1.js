@@ -24,16 +24,17 @@ export default function App() {
                         name="email" 
                         // ##### This part of the code requires this field to be filled in. It also requires a certain pattern (for email) #####
                         // ##### Then follows the error messages that are displayed if the validation determines the user input is not in the correct expected format #####
-                        // ##### This has been refactored from REV_1 and also includes additional validation tests #####
                         {...register("email", {
-                            required: "Email is required",
-                            pattern: {
-                                value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-                                message: "Email is not valid"
-                            }
+                            required: true,
+                            pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/
                         })} 
                     />
-                    {errors.email && (<p className="errorMsg">{errors.email.message}</p>)}
+                    {errors.email && errors.email.type === "required" && (
+                        <p className="errorMsg">Email is required</p>
+                    )}
+                    {errors.email && errors.email.type === "pattern" && (
+                        <p className="errorMsg">Email is not valid</p>
+                    )}
                 </div>
 
                 <div className="form-control">
@@ -42,24 +43,17 @@ export default function App() {
                         type="text"
                         name="password"
                         // ##### This part of the code requires this field to be filled in. It also requires a certain pattern (for email) #####
-                        // ##### Then follows the error messages that are displayed if the validation determines the user input is not in the correct expected format #####
-                        // ##### This has been refactored from REV_1 and also includes additional validation tests ##### 
+                        // ##### Then follows the error messages that are displayed if the validation determines the user input is not in the correct expected format ##### 
                         {...register("password", {
                             required: true,
-                            validate: {
-                                checkLength: (value) => value.length >= 6,
-                                matchPattern: (value) => /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
-                            }
+                            minLength: 6
                         })}
                     />
-                    {errors.password?.type === "required" && ( 
+                    {errors.password && errors.password.type === "required" && (
                         <p className="errorMsg">Password is required</p>
                     )}
-                    {errors.password?.type === "checkLength" && ( 
+                    {errors.password && errors.password.type === "minLength" && (
                         <p className="errorMsg">Password should be at least 6 characters</p>
-                    )}
-                    {errors.password?.type === "matchPattern" && ( 
-                        <p className="errorMsg">Password should contain at least one uppercase letter, lowercase letter, digit, and special symbol</p>
                     )}
                 </div>
 
